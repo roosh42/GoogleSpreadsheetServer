@@ -1,7 +1,9 @@
-/*************************************************************
- *             QUICK INSTRUCTIONS                            *
- * 0. Have a Google/Gmail account.  (I hope to add support for Micorosft & Apple accounts one day.)                           *
- ***************************************************/
+/******************************************************************************
+ *             QUICK INSTRUCTIONS                                             *
+ * 0. Have a Google/Gmail account.  (You can create a new on just for this).  *
+ * 1. Visit <insert link> this Spreadsheet with your Google account signed in *
+ * 2. File > Make a Copy                                                      *
+ ******************************************************************************/
 
 /*
  * Allow anyone to send an email that will end up as a row in a spreadsheet.
