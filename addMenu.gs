@@ -43,13 +43,16 @@ function permissionsExist() {
 
 function processNow() {
   try {
-    let content = UrlFetchApp.fetch(email_processing_library_permalink).getContent();
+    let content = UrlFetchApp.fetch(email_processing_library_permalink).getContentText();
     eval(content);
     processUnstarredEmails({
       filter: "to:" + getPlusEmail(),
       max_messages_to_process: 5
     })
-  } catch(e) {}
+  } catch(e) {
+    SpreadsheetApp.getUi().alert('processing had an error: ' + e.message);
+  }
+  SpreadsheetApp.getUi().alert('Processed emails succesfully');
 }
 
 function doNothing() {}
@@ -95,6 +98,14 @@ function onOpen() {
   addMenu();
 }
 
+function showHelp() {
+  var htmlOutput = HtmlService
+    .createHtmlOutput('<a href=""https://docs.google.com/presentation/d/e/2PACX-1vRgkfjkMLKcrTka9Jsk3Ww2_YfuOut6_MleS30O4wRR79a5RgYpSBC1yaiO9w3ebIebkeIdnlT1wAgp/pub?start=true&loop=false&delayms=10000">A Slideshow explaining the permissions dialog boxs.</a>')
+    .setWidth(250)
+    .setHeight(300);
+SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Email Processing with Gmail and Google Sheets');
+}
+
 // Calling this multiple times will replace the previous menu with the new one.
 function addMenu() {
   var ui = SpreadsheetApp.getUi();
@@ -102,17 +113,20 @@ function addMenu() {
 
   if (!permissionsExist()) {
     menu.addItem('Check Permissions (required)', 'addMenu');
+    menu.addItem('Process emails once now (requires permisssions)', 'processNow');
     menu.addItem('Revoke Permissions', 'revokePermissions');
-    menu.addItem('[Look here again after Check Permissions]', 'doNothing');
+    menu.addItem('Help', 'showHelp');
   } else if (!triggerExists()) {
     menu.addItem('Activate processing for ' + getPlusEmail(), 'activateProcessing');
-    menu.addItem('Revoke permissions', 'revokePermissions');
     menu.addItem('Process emails once now', 'processNow');
+    menu.addItem('Revoke permissions', 'revokePermissions');
+    menu.addItem('Help', 'showHelp');
   } else {
     // Both permissions and Trigger are exist
     menu.addItem('Deactiate processing for ' + getPlusEmail(), 'deactivateProcessing');
-    menu.addItem('Revoke permissions (and deactivate)', 'revokePermissions');
     menu.addItem('Process emails once now', 'processNow');
+    menu.addItem('Revoke permissions (and deactivate)', 'revokePermissions');
+    menu.addItem('Help', 'showHelp');
   }
   menu.addToUi();
 }
