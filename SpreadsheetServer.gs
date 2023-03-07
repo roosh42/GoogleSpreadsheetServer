@@ -26,8 +26,10 @@ function secret() {
  * 2. Copy all of this code, and paste it into the editor (for Code.gs).     *
  * 3. Change the secret() return value above to something only you know.     *
  * 4. Click Run.                                                             *
- * 5. You will be prompted to give the script permission to modify the       *
- *    new spreadsheet that you just created: Approve it.                     *
+ *    - click Review Permissions                                             *
+ *    - Choose your Google Account                                           *
+ *    - You will be prompted to give the script permission to modify ONLY    *
+ *      the spreadsheet that you just created: Approve it(^).                *
  * 6. Deploy > New Deployments                                               *
  * 7. Select Type > Web App                                                  *
  * 8. Fill in any description you like. E.G. "My Spreadsheet Server".        *
@@ -41,6 +43,9 @@ function secret() {
  * Congratulations: You now have a way to insert rows to your spreadsheet    *
  *   by requesting the website above.  Anyone who has that link will be able *
  *   to add rows with any content they put in the url.                       *
+ *                                                                           *
+ * (^) You can check and revoke Third-Party permissions on your account at:  *
+ *   https://myaccount.google.com/permissions?continue=https%3A%2F%2Fmyaccount.google.com%2Fsecurity
  *****************************************************************************/
 
 /*
@@ -362,3 +367,4 @@ function doGet(e) {
   // Returns a map of the sheet's header, from column name to column index.
   appendValuesToSheet(columnName2value, sheet);
 }
+
