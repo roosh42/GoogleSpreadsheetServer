@@ -295,7 +295,8 @@ function sanitizeQueryParameters(queryParameters) {
     // We're looking to find a sheet name, even if it's past the max number of columns allowed.
     let ñkey = normalize(key);
     if (ñkey == 'sheetname') {
-      sheetName = queryParameters[ñkey];  // This is the only key that we alter into the normalized one.
+      columnName2value['sheetname'] = queryParameters[key];  // This is the only key that we alter into the normalized one.
+      continue;
     }
 
     // We don't want to store the secret (or Secret) in the spreadsheet.
@@ -366,5 +367,7 @@ function doGet(e) {
   // Add any missing columns that the request recorded in column2values.
   // Returns a map of the sheet's header, from column name to column index.
   appendValuesToSheet(columnName2value, sheet);
+
+  return ContentService.createTextOutput("OK");
 }
 
