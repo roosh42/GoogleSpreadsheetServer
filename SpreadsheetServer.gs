@@ -6,9 +6,7 @@
 // Offered under the MIT License (2023)
 
 /*
- * If you put in your own secret inside the quotes, that will allow you to
- * send formulas to your spreadsheet as well.
- * Leave this as-is if you don't want the possibility of formulas.
+ * A "secret" string that allows you to enable inserting formulas in the spreadsheet.
  */
 function secret() {
   // TODO: Change this to a secret (min 6 characters) to allow you
@@ -28,20 +26,20 @@ function secret() {
  * 2. Copy all of this code, and paste it into the editor (for Code.gs).     *
  * 3. Change the secret() return value above to something only you know.     *
  * 4. Click Run.                                                             *
- *    - click Review Permissions                                             *
- *    - Choose your Google Account                                           *
- *    - You will be prompted to give the script permission to modify ONLY    *
+ *    a. click Review Permissions                                            *
+ *    b. Choose your Google Account                                          *
+ *    c. You will be prompted to give the script permission to modify ONLY   *
  *      the spreadsheet that you just created: Approve it(^).                *
  * 5. Deploy > New Deployments                                               *
- *    - Select Type > Web App                                                *
- *    - Fill in any description you like. E.G. "My Spreadsheet Server".      *
- *    - IMPORTANT! fill in these two fields as follows:                      *
- *      Execute as:     [ Me (youremail@gmail.com) ]           !!!!          *
- *      Who has access: [ Anyone                   ]           !!!!          *
- *                      (NOT "Anyone with Google Account")                   *
- *    - Click Deploy                                                         *
- *    - copy the Web App URL                                                 *
- *     (E.G. https://script.google.com/macros/s/AKfycb.....P7_ISg/exec)      *
+ *    a. Select Type > Web App                                               *
+ *    b. IMPORTANT: Fill in the Web App fields as below                      *
+ *      Description:      [ Anythin you like.        ]                       *
+ *      Execute as:       [ Me (youremail@gmail.com) ]    !IMPORTANT!        *
+ *      Who has access:   [ Anyone                   ]    !IMPORTANT!        *
+ *                     (NOT "Anyone with Google Account")                    *
+ *    c. Click Deploy                                                        *
+ *    d. copy the Web App URL                                                *
+ *       (E.G. https://script.google.com/macros/s/AKfycb.....P7_ISg/exec)    *
  *                                                                           *
  * Congratulations: You now have a way to insert rows to your spreadsheet    *
  *   by requesting the website above.  Anyone who has that link will be able *
@@ -74,6 +72,63 @@ function normalize(key) {
   ñkey = ñkey.toLowerCase();
   return ñkey;
 }
+
+
+/*
+ * THIS IS THE MAIN FUNCTION.  It is the starting point that gets called whenever
+ * someone sends a request to the Web App URL (from step 5d of the instructions).
+ * The values that this function uses are the "query parameters".  That's all
+ * the stuff after the '?' (assuming there is a '?').  The paramters take the form
+ * key=value, and they are separated with '&'.  For example:
+ * 
+ * If the url is https://script.google.com/macros/e/d/ABcd12_34/exec
+ * then query parameters are added by making the url something like this:
+ * https://script.google.com/macros/e/d/ABcd12_34/exec?firstName=Snow&lastName=White&numFriends=7
+ * 
+ * Dealing with spaces gets a bit tricky, but for the most part, they are dealt with.
+ * 
+ * Even though you type the query parameters into the browser with plain text, the browser
+ * encrypts them before sending them over the internet to this function.  Once they arrive,
+ * they are decrypted so the function can deal with the plain text that was in the query parameters. 
+ */
+function doGet(e) {
+  // This script is only allowed to view/edit the spreadsheet to which it is attached.
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  // Get the sheet that has the sheet_name specified in the request.
+  // See comments in getSheet for fallbacks if no sheet by that name exists.
+
+  // columnName2value is a map from column name to the value that should be inserted into that column.
+  // Though it is named in the singular (i.e. not columnNames2values), it contains multiple pairings of {columnName: value}.
+  let columnName2value = sanitizeQueryParameters(e.parameter);
+
+  // If there is no 'sheetname', then sheetName will be undefined, and that's OK.
+  let sheetName = columnName2value['sheetname'];
+  let sheet = chooseSheet(spreadsheet, sheetName);
+
+  // From https://support.google.com/docs/thread/181288162/whats-the-maximum-amount-of-rows-in-google-sheets?hl=en
+  // The maximum number of columns is 18,278 and the maximum cells is 10,000,000
+  // If the sheet is already within a factor of 2 for either of these, do not do anything more.
+  let numRows = sheet.getMaxRows();
+  let numColumns = sheet.getMaxColumns();
+  if (numColumns > (18278 / 2)) {
+    throw `Sheet ${sheet.getName()} has too many columns (${numColumns} > ${18278/2})`;
+  }
+  let numCells = numRows * numColumns;
+  if (numCells > (10000000 / 2)) {
+    throw `Sheet ${sheet.getName()} has too many cells (${numCells} > ${10000000/2})`;
+  }
+
+  // record the time on the server that this request came in. In JavaScript, "new Date()" gives the date-time for 'now'.
+  columnName2value.server_time = JSON.stringify(new Date());
+  
+  // Add any missing columns that the request recorded in column2values.
+  // Returns a map of the sheet's header, from column name to column index.
+  appendValuesToSheet(columnName2value, sheet);
+
+  return ContentService.createTextOutput("OK");
+}
+
+
 
 /*
  * Tries to return the sheet with the name that matches soughtSheetName.
@@ -340,45 +395,5 @@ function sanitizeQueryParameters(queryParameters) {
   }
 
   return columnName2value;
-}
-
-// Using get in order to make it transparent.
-// The user can hover over the "send" link in the app,  to see what request will get sent.
-// The call is over https, so it's already end-to-end encrypted
-function doGet(e) {
-  // This script is only allowed to view/edit the spreadsheet to which it is attached.
-  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  // Get the sheet that has the sheet_name specified in the request.
-  // See comments in getSheet for fallbacks if no sheet by that name exists.
-
-  // columnName2value is a map from column name to the value that should be inserted into that column.
-  // Though it is named in the singular (i.e. not columnNames2values), it contains multiple pairings of {columnName: value}.
-  let columnName2value = sanitizeQueryParameters(e.parameter);
-
-  // If there is no 'sheetname', then sheetName will be undefined, and that's OK.
-  let sheetName = columnName2value['sheetname'];
-  let sheet = chooseSheet(spreadsheet, sheetName);
-
-  // From https://support.google.com/docs/thread/181288162/whats-the-maximum-amount-of-rows-in-google-sheets?hl=en
-  // The maximum number of columns is 18,278 and the maximum cells is 10,000,000
-  // If the sheet is already within a factor of 2 for either of these, do not do anything more.
-  let numRows = sheet.getMaxRows();
-  let numColumns = sheet.getMaxColumns();
-  if (numColumns > (18278 / 2)) {
-    throw `Sheet ${sheet.getName()} has too many columns (${numColumns} > ${18278/2})`;
-  }
-  let numCells = numRows * numColumns;
-  if (numCells > (10000000 / 2)) {
-    throw `Sheet ${sheet.getName()} has too many cells (${numCells} > ${10000000/2})`;
-  }
-
-  // record the time on the server that this request came in. In JavaScript, "new Date()" gives the date-time for 'now'.
-  columnName2value.server_time = JSON.stringify(new Date());
-  
-  // Add any missing columns that the request recorded in column2values.
-  // Returns a map of the sheet's header, from column name to column index.
-  appendValuesToSheet(columnName2value, sheet);
-
-  return ContentService.createTextOutput("OK");
 }
 
