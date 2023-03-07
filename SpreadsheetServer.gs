@@ -421,7 +421,7 @@ function doesValueHaveDangerousFormula(value) {
   // one of their parameters as a url, so that is a potential leak for sending out data.
   let urlFunctions = ["HYPERLINK", "IMPORTDATA", "IMPORTHTML", "IMPORTRANGE", "IMAGE", "IMPORTFEED", "IMPORTXML"];
   // Looking at the above, I'll condense it a bit:
-  let dangrousSubstrings = ["LINK", "IMPORT", "HTML", "IMAGE"];
+  let dangerousSubstrings = ["LINK", "IMPORT", "HTML", "IMAGE"];
   for (let dangerousSubstring of dangerousSubstrings) {
     if (value.indexOf(dangerousSubstring) >= 0) {
       return true;
