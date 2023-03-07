@@ -22,6 +22,8 @@ function secret() {
  *          INSTRUCTIONS                                                     *
  * 0. (optional) Read this code and satisfy yourself that you are willing    *
  *    to run it on a specifically chosen spreadsheet in your Google account. *
+ *    There are about 130 lines of actual code here, and they are not dense. *
+ *                                                                           *
  * 1. In a new Google Spreadsheet, use the menu Extensions > Apps Script     *
  * 2. Copy all of this code, and paste it into the editor (for Code.gs).     *
  * 3. Change the secret() return value above to something only you know.     *
@@ -30,19 +32,26 @@ function secret() {
  *    - Choose your Google Account                                           *
  *    - You will be prompted to give the script permission to modify ONLY    *
  *      the spreadsheet that you just created: Approve it(^).                *
- * 6. Deploy > New Deployments                                               *
- * 7. Select Type > Web App                                                  *
- * 8. Fill in any description you like. E.G. "My Spreadsheet Server".        *
- * 9. IMPORTANT:                                                             *
- *      Execute As:     [ Me (youremail@gmail.com) ]                         *
- *      Who has Access: [ Anyone                   ]                         *
+ * 5. Deploy > New Deployments                                               *
+ *    - Select Type > Web App                                                *
+ *    - Fill in any description you like. E.G. "My Spreadsheet Server".      *
+ *    - IMPORTANT! fill in these two fields as follows:                      *
+ *      Execute as:     [ Me (youremail@gmail.com) ]           !!!!          *
+ *      Who has access: [ Anyone                   ]           !!!!          *
  *                      (NOT "Anyone with Google Account")                   *
- * 10. Click Deploy                                                          *
- * 11. copy the Web App URL                                                  *
+ *    - Click Deploy                                                         *
+ *    - copy the Web App URL                                                 *
  *     (E.G. https://script.google.com/macros/s/AKfycb.....P7_ISg/exec)      *
+ *                                                                           *
  * Congratulations: You now have a way to insert rows to your spreadsheet    *
  *   by requesting the website above.  Anyone who has that link will be able *
  *   to add rows with any content they put in the url.                       *
+ *                                                                           *
+ * The script runs as YOU -- Not as the person who sends the url request.    *
+ *   - That is why you do not need to share the spreadsheet with anyone...   *
+ *     YOU already have permission to read&write to the spreadsheet.         *
+ *   - The script can't do anything outside the permission you gave it,      *
+ *     which was to access that one spreadsheet using your access.           *
  *                                                                           *
  * (^) You can check and revoke Third-Party permissions on your account at:  *
  *   https://myaccount.google.com/permissions?continue=https%3A%2F%2Fmyaccount.google.com%2Fsecurity
@@ -160,7 +169,8 @@ function addNovelColumns(sheet, columnName2value) {
 
   // Optional: See detailed discussion about stray values in the spreadsheet for corner-case details.
   
-  // Now it's time to add more ñcolumnName -> columnIndex pairings to ñheaderName2columnIndex, for the new column names that are  not in the spreadsheet's header names.
+  // Now it's time to add more ñcolumnName -> columnIndex pairings to ñheaderName2columnIndex,
+  // for the new column names that are  not in the spreadsheet's header names.
 
   // When we find a novel column name, it will go at nextColumnIndex.
   let nextColumnIndex = numHeaderNames;
@@ -181,7 +191,8 @@ function addNovelColumns(sheet, columnName2value) {
     nextColumnIndex++;
   }
 
-  // if the value of nextColumnIndex never changed from its original value of numHeaderNames (see about 20 lines above), there are no new header names to update.
+  // if the value of nextColumnIndex never changed from its original value of numHeaderNames (see about 20 lines above),
+  //  there are no new header names to update.
   if (nextColumnIndex == numHeaderNames) {
     // nothing to do since we didn't add any new column names
   } else {
