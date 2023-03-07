@@ -23,7 +23,8 @@ function secret() {
  *    There are about 130 lines of actual code here, and they are not dense. *
  *                                                                           *
  * 1. In a new Google Spreadsheet, use the menu Extensions > Apps Script     *
- * 2. Copy all of this code, and paste it into the editor (for Code.gs).     *
+ * 2. Copy the contents of this file, and paste it into the editor.          *
+ *    a. Save it with Ctrl+S or by clicking the floppy disk icon.            *
  * 3. Change the secret() return value above to something only you know.     *
  * 4. Click Run.                                                             *
  *    a. click Review Permissions                                            *
@@ -33,7 +34,7 @@ function secret() {
  * 5. Deploy > New Deployments                                               *
  *    a. Select Type > Web App                                               *
  *    b. IMPORTANT: Fill in the Web App fields as below                      *
- *      Description:      [ Anythin you like.        ]                       *
+ *      Description:      [ Anything you like.        ]                       *
  *      Execute as:       [ Me (youremail@gmail.com) ]    !IMPORTANT!        *
  *      Who has access:   [ Anyone                   ]    !IMPORTANT!        *
  *                     (NOT "Anyone with Google Account")                    *
@@ -305,20 +306,14 @@ function appendValuesToSheet(columnName2value, sheet) {
 }
 
 
-/*
- * An conservative approximation that checks if the value might be a formula.
- */
-function doesValueHaveFormula(value) {
-  // Some manual testing showed that sending escape sequences for an equal sign does not create formulas.
-  // Only the actual = character initiates a formula.
-  let hasEqualSign = value.indexOf('=') >= 0;
-  return hasEqualSign;
-}
+/**** The functions below this line may be a bit harder to read for non-programmers. ****/
 
-// Go through the queryParameters, and copy them into a columnName2value mapping.
-// An arbitrary max of 64 columnNames will cut off any excessivly long list.
-// An arbitrary max of 128 characters for the column name will reject longer names.
-// An arbitrary max of 4096 bytes per value will reject any large values.
+/* 
+ * Go through the queryParameters, and copy them into a columnName2value mapping.
+ * An arbitrary max of 64 columnNames will cut off any excessivly long list.
+ * An arbitrary max of 128 characters for the column name will reject longer names.
+ * An arbitrary max of 4096 bytes per value will reject any large values.
+ */
 function sanitizeQueryParameters(queryParameters) {
 
   // if a secret has been set to a string at least 6 characters long,
@@ -349,7 +344,15 @@ function sanitizeQueryParameters(queryParameters) {
       errors.numValuesTooLarge++;
       continue;
     }
-    
+
+    // Even if allowFormulas is on, there are some functions which can be particularly dangerous
+    // in their ability to call out to a url and thus send the spreadsheet's information to a 3rd party.
+    let valueMightBeDangrousFormula = doesValueHaveDangerousFormula(value);
+    if (valueMightBeDangrousFormula) {
+      errors.numFormulasExcluded++;
+      continue;
+    }
+
     // if value might have a formula and that is not allowed, continue to the next key/value
     let valueMightHaveFormula = doesValueHaveFormula(value);
     if (valueMightHaveFormula && !allowFormulas) {
@@ -397,3 +400,32 @@ function sanitizeQueryParameters(queryParameters) {
   return columnName2value;
 }
 
+
+/*
+ * An conservative approximation that checks if the value might be a formula.
+ */
+function doesValueHaveFormula(value) {
+  // Some manual testing showed that sending escape sequences for an equal sign does not create formulas.
+  // Only the actual = character initiates a formula.
+  let hasEqualSign = value.indexOf('=') >= 0;
+  return hasEqualSign;
+}
+
+/*
+ * Heuristic that checks if the value might have a dangerous formula that
+ * could potentially contain a url argument which can leak information from
+ * the spreadsheet.
+ */
+function doesValueHaveDangerousFormula(value) {
+  // Based on https://support.google.com/docs/search?q=url, these are the functions that treat
+  // one of their parameters as a url, so that is a potential leak for sending out data.
+  let urlFunctions = ["HYPERLINK", "IMPORTDATA", "IMPORTHTML", "IMPORTRANGE", "IMAGE", "IMPORTFEED", "IMPORTXML"];
+  // Looking at the above, I'll condense it a bit:
+  let dangrousSubstrings = ["LINK", "IMPORT", "HTML", "IMAGE"];
+  for (let dangerousSubstring of dangerousSubstrings) {
+    if (value.indexOf(dangerousSubstring) >= 0) {
+      return true;
+    }
+  }
+  return false;
+}
