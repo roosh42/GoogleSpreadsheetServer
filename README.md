@@ -25,3 +25,7 @@ https://script.google.com/home/triggers
 In the spreadsheet's menu, Extensions > Apps Script
   - Take a look that under `Files`, the only one listed is `Code.gs`
   - Skim through the file.  This is the code that is generating the `Email Processing` menu.
+
+To use the data outside of Google Sheets, you can publish the sheet as an online CSV source and consume it in your favorite program.
+  - For working in Microsoft Excel, here is a good [YouTube video by Marc Ursell](https://www.youtube.com/watch?v=vAdJrUIhS8o).
+  - For working in Apple Numbers, I couldn't find an off-the-shelf solution, but AppleScript is powerful enough to implement something like [this Apple community post](https://discussions.apple.com/thread/8126136)
