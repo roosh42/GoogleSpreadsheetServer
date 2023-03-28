@@ -8,11 +8,11 @@ The server you deploy has a public URL that can be used to insert new rows into 
   - The server only has permission to operate on the one spreadsheet that it is attached to.
 
 ## Terminology
-|                 | description                                                   | Excel equivalent                       | Numbers equivalent                    |
-|-----------------|---------------------------------------------------------------|----------------------------------------|---------------------------------------|
-| `sheet`         | An individual tab within the spreadsheet file.                | worksheet                              | sheet                                 |
-| `spreadsheet`   | A file in Google Sheets. Can contain many sheets.             | workbook (contains worksheets)         | spreadsheet (contains sheets)         |
-| `Google Sheets` | The program/service that Google provides for grid-based data. | Microsoft Excel                        | Apple Numbers                         |
+|               | description                                                   | Excel equivalent                       | Numbers equivalent                    |
+|-------------- |---------------------------------------------------------------|----------------------------------------|---------------------------------------|
+| sheet         | An individual tab within the spreadsheet file.                | worksheet                              | sheet                                 |
+| spreadsheet   | A file in Google Sheets. Can contain many sheets.             | workbook (contains worksheets)         | spreadsheet (contains sheets)         |
+| Google Sheets | The program/service that Google provides for grid-based data. | Microsoft Excel                        | Apple Numbers                         |
 
 ## Basic Instructions for *Spreadsheet with Server* (Desktop version)
 
