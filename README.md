@@ -60,7 +60,7 @@ Once you have the URL of a deployed Web App, it will looks something like
   - https://script.google.com/macros/s/AKfycbwIeR6hGK_NgF22d896q............................XdSnZX41Ew/exec
 If you lost the URL, go to `Deploy` > `Manage deployments` and `Copy` the URL under `Web App`.
 
-This Web App uses [query parameters](shorturl.at/lvwGU) to pass in the information for a new row in the spreadsheet.
+This Web App uses [query parameters](https://shorturl.at/lvwGU) to pass in the information for a new row in the spreadsheet.
 
 The only special parameter keys are
  - sheetname: The preferred name of the sheet into which the row is added.
@@ -96,3 +96,13 @@ If you want to be able to send formulas to your spreadsheet through the Web App 
 To use the data outside of Google Sheets, you can publish the sheet as an online CSV source and consume it in your favorite program.
   - For working in Microsoft Excel, here is a good [YouTube video by Marc Ursell](https://www.youtube.com/watch?v=vAdJrUIhS8o).
   - For working in Apple Numbers, I couldn't find an off-the-shelf solution, but AppleScript is powerful enough to implement something like [this Apple community post](https://discussions.apple.com/thread/8126136)
+
+## Security matters
+
+When the row contents is sent over the internet to the Web App server (either from a browser or an app/website), it is encrypted.
+That's what the `https` at the strt of the URL means.
+Once they arrive, they are decrypted so the function can deal with the plain text that was in the query parameters.
+
+Only people you give access to will be able to see/edit the spreadsheet.
+However, anyone with the Web App URL can insert new rows into the spreadsheet.
+
