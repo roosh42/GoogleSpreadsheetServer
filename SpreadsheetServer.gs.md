@@ -76,7 +76,7 @@ If you want to be able to send formulas to your spreadsheet through the Web App 
 2. Follow the Basic Instructions above, starting at Step 3, to create a `New Deployment`.
   - You may not need to re-authorize, so step 4 will be skipped.
 
-##The Code:
+## The Code:
 ```
 
 */
