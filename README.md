@@ -4,7 +4,7 @@
 The server you deploy has a public URL that can be used to insert new rows into any of the sheets in your chosen spreadsheet.
 
 ## It's your code, running as you
-  - [See and revoke access](https://myaccount.google.com/permissions?continue=https%3A%2F%2Fmyaccount.google.com%2Fsecurity%3Fpli%3D1%26nlr%3D1) to scripts in your Google Account
+  - [See and revoke access](https://myaccount.google.com/permissions?continue=https%3A%2F%2Fmyaccount.google.com%2Fsecurity%3Fpli%3D1%26nlr%3D1) to scripts in your Google Account.
   - [See and delete the triggers](https://script.google.com/home/triggers) (time-based and otherwise) in your Google Account.
   - The server only has permission to operate on the one spreadsheet that it is attached to.
 
@@ -22,9 +22,7 @@ The server you deploy has a public URL that can be used to insert new rows into 
   b. Open [Spreadsheet with Server (template)](https://docs.google.com/spreadsheets/d/1kU2IiLpKKVM_Zb3BzlB_b3I9ww1Rio81olDnzu6avWg/).
   c. `File` > `Make a Copy`
   d. Click the copy button.
-2. In your new copy, open Apps Script.
-  a. `Extensions` > `Apps Script`
-  b. (optional) Read the code to see how it adds new rows to the spreadsheet.
+2. In your new copy, open Apps Script with `Extensions` > `Apps Script`
 3. Deploy the Apps Script as a Web App.
   a. `Deploy` *in the top-right corner* > `New Deployments`
   b. `Select Type` > `Web App`
@@ -48,6 +46,15 @@ Note: The script runs as ***you*** -- Not as the person/program who sends the ur
 That is why you do not need to share the spreadsheet with anyone -- You already have permission to read&write the spreadsheet.
 
 ## Advanced Instructions
+
+### Open Source instructions (for programmers)
+If you don't want to copy the template spreadsheet with its code already included, you can get the code yourself.
+
+1. Create a new Google spreadsheet.
+2. Open the attached Apps Script by going to `Extensions` > `Apps Script`.
+3. Replace the code in `Code.gs` with the [permalinked code for version=202303260837](https://raw.githubusercontent.com/anerb/GoogleSpreadsheetServer/5a19d8dfd050db4d2158c224dca5de91edffaff9/SpreadsheetServer.gs)
+  - This code is frozen in time.  If you or anyone else has reviewed it, Github ensures that it will be unchanged via the permalink.
+4. Proceed with the Basic Instructions, starting at step 3.
 
 ### Using the Web App URL
 Once you have the URL of a deployed Web App, it will looks something like
