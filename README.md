@@ -1,31 +1,92 @@
-# GAS_email_processing
-Google Apps Script code for email processing.
+# Spreadsheet Server
+## Add a Web App Server to your Google Spreadsheet.
 
-To get started
- - Recommended: Do this with a secondary Google/Gmail account.
- - Open this [Google Spreadsheet](https://docs.google.com/spreadsheets/d/1BDXax6L6kLwAHUoqA3Me9gipQWdRQb82aE3voDUEX48/edit#gid=0)
- - Make a copy and rename it
-    - Use the Email Processing menu for the rest (it takes a few seconds to show up after opening your spreadsheet)
-
-Include this in your Google Apps Script so you can run processUnstarredEmails on a time-based trigger.
-
-This code will run as "you" on whatever Google/Gmail account you use it.
-
-[Here is an explanation](https://docs.google.com/presentation/d/e/2PACX-1vRgkfjkMLKcrTka9Jsk3Ww2_YfuOut6_MleS30O4wRR79a5RgYpSBC1yaiO9w3ebIebkeIdnlT1wAgp/pub?start=true&loop=false&delayms=10000) of the permissions you will need to Allow.
+The server you deploy has a public URL that can be used to insert new rows into any of the sheets in your chosen spreadsheet.
 
 ## It's your code, running as you
+  - [See and revoke access](https://myaccount.google.com/permissions?continue=https%3A%2F%2Fmyaccount.google.com%2Fsecurity%3Fpli%3D1%26nlr%3D1) to scripts in your Google Account
+  - [See and delete the triggers](https://script.google.com/home/triggers) (time-based and otherwise) in your Google Account.
+  - The server only has permission to operate on the one spreadsheet that it is attached to.
 
-### To see and revoke access to scripts in your Google Account
-https://myaccount.google.com/permissions?continue=https%3A%2F%2Fmyaccount.google.com%2Fsecurity%3Fpli%3D1%26nlr%3D1
+## Terminology
+|                 | description                                                   | Excel equivalent                       | Numbers equivalent                    |
+|-----------------|---------------------------------------------------------------|----------------------------------------|---------------------------------------|
+| `sheet`         | An individual tab within the spreadsheet file.                | worksheet                              | sheet                                 |
+| `spreadsheet`   | A file in Google Sheets. Can contain many sheets.             | workbook (contains worksheets)         | spreadsheet (contains sheets)         |
+| `Google Sheets` | The program/service that Google provides for grid-based data. | Microsoft Excel                        | Apple Numbers                         |
 
-### To see and delete the triggers (time-based and otherwise) in your Google Account
-https://script.google.com/home/triggers
+## Basic Instructions for *Spreadsheet with Server* (Desktop version)
 
-### To see the code running when you open the spreadsheet
-In the spreadsheet's menu, Extensions > Apps Script
-  - Take a look that under `Files`, the only one listed is `Code.gs`
-  - Skim through the file.  This is the code that is generating the `Email Processing` menu.
+1. Make your own copy of the spreadsheet with one of your Google accounts.
+  a. Log into the Google account that will own your spreadsheet.
+  b. Open [Spreadsheet with Server (template)](https://docs.google.com/spreadsheets/d/1kU2IiLpKKVM_Zb3BzlB_b3I9ww1Rio81olDnzu6avWg/).
+  c. `File` > `Make a Copy`
+  d. Click the copy button.
+2. In your new copy, open Apps Script.
+  a. `Extensions` > `Apps Script`
+  b. (optional) Read the code to see how it adds new rows to the spreadsheet.
+3. Deploy the Apps Script as a Web App.
+  a. `Deploy` *in the top-right corner* > `New Deployments`
+  b. `Select Type` > `Web App`
+  c. Change "Who has access" to `Anyone` (NOT "Anyone with Google Account")
+  d. Click `Deploy`
+4. Grant permissions (for the script to modify only the one spreadsheet it is attached to).
+  a. `Authorize Access`
+  b. Select the Google account that owns your spreadsheet.
+  c. Click `Allow` for "View and manage spreadsheets that this applicaion has been installed in".
+5. Save the Web App URL.  
+  a. `Copy` the Web App URL. (It starts with https://script.google.com/macros) 
+  b. Save the Web App URL (e.g. Email it yourself or paste it in a document.)
 
+You can now close the Apps Script tab.
+
+**Congratulations!** You now have a way to programatically insert rows to your spreadsheet by requesting the URL from above.
+  
+Anyone who has that link will be able to add rows with any content they put in the url.
+
+Note: The script runs as ***you*** -- Not as the person/program who sends the url request.
+That is why you do not need to share the spreadsheet with anyone -- You already have permission to read&write the spreadsheet.
+
+## Advanced Instructions
+
+### Using the Web App URL
+Once you have the URL of a deployed Web App, it will looks something like
+  - https://script.google.com/macros/s/AKfycbwIeR6hGK_NgF22d896q............................XdSnZX41Ew/exec
+If you lost the URL, go to `Deploy` > `Manage deployments` and `Copy` the URL under `Web App`.
+
+This Web App uses [query parameters](shorturl.at/lvwGU) to pass in the information for a new row in the spreadsheet.
+
+The only special parameter keys are
+ - sheetname: The preferred name of the sheet into which the row is added.
+ - server_time: The time that this row is processed.
+ - secret: Optional secret word if you want to allow formulas.
+ - password: Eliminated from the query parameters, as a precaution.
+
+ For all other query parameters, the key is used as the column heading, and the value is what shows up in the newly inserted row.
+
+ Try pasting your URL into the address bar of a browser and add ?firstName=Big&lastName=Bird.
+ For example: 
+ ```
+ https://script.google.com/macros/s/AKfycb....replace_with_your_url........nZX41Ew/exec?firstName=Big&lastName=Bird&sheetName=data
+ ```
+
+This Spreadsheet with Server is designed to let apps and websites programatically insert rows to the spreadsheet
+by creating urls like the one above, and requesting that url (with a GET request).
+
+Developer Tip: CORS Policy does not allow any data to be returned by the server, so set the `mode='no-cors'`.
+
+### Enabling formulas for inserted spreadsheet rows.
+If you want to be able to send formulas to your spreadsheet through the Web App URL, follow these steps.
+1. Pick a secret.
+  a. Scroll a few lines down and find `function secret()`.
+  b. Change the word in single-quotes to a secret
+    - This is not an account password.
+    - Minimum 6 characters long.
+    - Case sensitive.
+2. Follow the Basic Instructions above, starting at Step 3, to create a `New Deployment`.
+  - You may not need to re-authorize, so step 4 will be skipped.
+
+## Using the collected data outside Google Sheets
 To use the data outside of Google Sheets, you can publish the sheet as an online CSV source and consume it in your favorite program.
   - For working in Microsoft Excel, here is a good [YouTube video by Marc Ursell](https://www.youtube.com/watch?v=vAdJrUIhS8o).
   - For working in Apple Numbers, I couldn't find an off-the-shelf solution, but AppleScript is powerful enough to implement something like [this Apple community post](https://discussions.apple.com/thread/8126136)
