@@ -1,7 +1,7 @@
-
+// For instructions, see https://anerb.github.io/GoogleSpreadsheetServer
 
 // Offered under the [MIT License](https://en.wikipedia.org/wiki/MIT_License) (2023)
-version=202303260622;
+version=202303260836;
 
 // The comment below indicates that this script will only be given permission
 // to the spreadsheet it is attached to.
