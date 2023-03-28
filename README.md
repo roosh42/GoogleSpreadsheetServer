@@ -1,4 +1,3 @@
-# Spreadsheet Server
 ## Add a Web App Server to your Google Spreadsheet.
 
 The server you deploy has a public URL that can be used to insert new rows into any of the sheets in your chosen spreadsheet.
