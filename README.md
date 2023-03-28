@@ -14,7 +14,7 @@ The server you deploy has a public URL that can be used to insert new rows into 
 | A file in Google Sheets. Can contain many sheets.             | spreadsheet (contains sheets) | workbook (contains worksheets) | spreadsheet (contains sheets) |
 | The program/service that Google provides for grid-based data. | Google Sheets                 | Microsoft Excel                | Apple Numbers                 |
 
-## Basic Instructions for *Spreadsheet with Server* (Desktop version)
+## 😀Basic Instructions for *Spreadsheet with Server* (Desktop version)
 
 1. Make your own copy of the spreadsheet with one of your Google accounts.
   a. Log into the Google account that will own your spreadsheet.
