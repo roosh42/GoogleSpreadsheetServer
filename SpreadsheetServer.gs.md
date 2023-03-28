@@ -1,4 +1,4 @@
-/*
+
 
 ## Basic Instructions for *Spreadsheet with Server* (Desktop version)
 
