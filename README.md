@@ -17,23 +17,23 @@ The server you deploy has a public URL that can be used to insert new rows into 
 ## 😀 Basic Instructions for *Spreadsheet with Server* (Desktop version)
 
 1. Make your own copy of the spreadsheet with one of your Google accounts.
-  a. Log into the Google account that will own your spreadsheet.
-  b. Open [Spreadsheet with Server (template)](https://docs.google.com/spreadsheets/d/1kU2IiLpKKVM_Zb3BzlB_b3I9ww1Rio81olDnzu6avWg/).
-  c. `File` > `Make a Copy`
-  d. Click the copy button.
+   1. Log into the Google account that will own your spreadsheet.
+   1. Open [Spreadsheet with Server (template)](https://docs.google.com/spreadsheets/d/1kU2IiLpKKVM_Zb3BzlB_b3I9ww1Rio81olDnzu6avWg/).
+   1. `File` > `Make a Copy`
+   1. Click the copy button.
 2. In your new copy, open Apps Script with `Extensions` > `Apps Script`
 3. Deploy the Apps Script as a Web App.
-  a. `Deploy` *in the top-right corner* > `New Deployments`
-  b. `Select Type` > `Web App`
-  c. Change "Who has access" to `Anyone` (NOT "Anyone with Google Account")
-  d. Click `Deploy`
+   1. `Deploy` *in the top-right corner* > `New Deployments`
+   1. `Select Type` > `Web App`
+   1. Change "Who has access" to `Anyone` (NOT "Anyone with Google Account")
+   1. Click `Deploy`
 4. Grant permissions (for the script to modify only the one spreadsheet it is attached to).
-  a. `Authorize Access`
-  b. Select the Google account that owns your spreadsheet.
-  c. Click `Allow` for "View and manage spreadsheets that this applicaion has been installed in".
+   1. `Authorize Access`
+   1. Select the Google account that owns your spreadsheet.
+   1. Click `Allow` for "View and manage spreadsheets that this applicaion has been installed in".
 5. Save the Web App URL.  
-  a. `Copy` the Web App URL. (It starts with https://script.google.com/macros) 
-  b. Save the Web App URL (e.g. Email it yourself or paste it in a document.)
+   1. `Copy` the Web App URL. (It starts with https://script.google.com/macros) 
+   1. Save the Web App URL (e.g. Email it yourself or paste it in a document.)
 
 You can now close the Apps Script tab.
 
