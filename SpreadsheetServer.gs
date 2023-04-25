@@ -2,7 +2,7 @@
 
 // Offered under the [MIT License](https://en.wikipedia.org/wiki/MIT_License) (2023)
 
-version=20230455160100;
+version=20230425123700;
 
 // TODO: Change all references to sheet/row/column into table/record/field.  This code should use general database terms, even if it's implemented in a spreadsheet.
 
@@ -22,6 +22,7 @@ const SERVER_FIELDS = {
   created_us: 'server_created_us',
   modified_us: 'server_modified_us',
   secret: 'server_secret',
+  forceerror: 'server_forceerror',
 }
 
 /*
@@ -246,8 +247,8 @@ function doGet(e) {
 }
 
 function handleRequest(parameterObject) {
-  if (parameterObject[SERVER_FIELDS.force_error]) {
-    throw new Error("Error requested by server_force_error.");
+  if (parameterObject[SERVER_FIELDS.forceerror]) {
+    throw new Error("Error requested by server_forceerror.");
   }
 
   // columnName2value is a map from column name to the value that should be inserted into that column.
