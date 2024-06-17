@@ -1,6 +1,6 @@
 /******************************************************************************
  *             QUICK INSTRUCTIONS                                             *
- * 0. Have a Google/Gmail account.  (You can create a new on just for this).  *
+ * 0. Have a Google/Gmail account.  (Maybe create a new one just for this).   *
  * 1. Visit <insert link> this Spreadsheet with your Google account signed in *
  * 2. File > Make a Copy                                                      *
  ******************************************************************************/
