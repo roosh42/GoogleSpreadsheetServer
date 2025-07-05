@@ -20,7 +20,7 @@ The server you deploy has a public URL that can be used to insert new rows into 
    1. Log into the Google account that will own your spreadsheet.
    1. Open [Spreadsheet with Server (template)](https://docs.google.com/spreadsheets/d/1kU2IiLpKKVM_Zb3BzlB_b3I9ww1Rio81olDnzu6avWg/).
    1. `File` > `Make a Copy`
-   1. Click the copy button.
+   1. Click the `Make a Copy` button.
 2. In your new copy, open Apps Script with `Extensions` > `Apps Script`
 3. Deploy the Apps Script as a Web App.
    1. `Deploy` *in the top-right corner* > `New Deployments`
@@ -63,6 +63,7 @@ If you lost the URL, go to `Deploy` > `Manage deployments` and `Copy` the URL un
 This Web App uses [query parameters](https://shorturl.at/lvwGU) to pass in the information for a new row in the spreadsheet.
 
 The only special parameter keys are
+ - spreadsheetid: Only used when a demo server is set up to change anyone-can-edit Spreadsheets.
  - sheetname: The preferred name of the sheet into which the row is added.
  - server_time: The time that this row is processed.
  - secret: Optional secret word if you want to allow formulas.
